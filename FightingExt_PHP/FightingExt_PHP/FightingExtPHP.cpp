@@ -8,8 +8,10 @@
 
 int main()
 {
+
+	//for now, the stats are hardcoded, but later will be fed from the db
 	std::map<std::string, int> mapStats;
-	mapStats["maxHP"] = 50;
+	mapStats["maxHP"] = 200;
 	mapStats["strength"] = 12;
 	mapStats["dexterity"] = 4;
 	mapStats["height"] = 230;
@@ -23,7 +25,7 @@ int main()
 
 	//changing stats a bit to generate different minion
 	mapStats["strength"] = 9;
-	mapStats["maxHP"] = 60;
+	mapStats["maxHP"] = 200;
 
 	Minion minion2(mapStats);
 
@@ -50,9 +52,9 @@ int main()
 	}
 	unit.combat(unit2);
 	std::cout << "despues del combate" << std::endl;
-	/*for (int i=0;i<minionSize;i++){
-	std::cout<<"el hp deste es" <<unit2.getMinion(i).getCurrentHP()<<std::endl;
-	}*/
+	for (int i=0;i<minionSize;i++){
+		std::cout<<"el hp deste es" <<unit2.getMinion(i).getCurrentHP()<<std::endl;
+	}
 	//wait for input boy
 	_getch();
 	return 0;

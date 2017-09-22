@@ -87,9 +87,13 @@ Minion& Unit::getMinion(int index) {
 //		middle > 	< middle
 //			last > 	< 0
 void Unit::combat(Unit& _enemyUnit) {
-	for (int i = 0; i<size; i++) {
+	for (int i = 0; i<columnSize; i++) {
 		//attack!!!
-		minions[i].attack(_enemyUnit.getMinion(size - (i + 1)));
+		//taking minions by index will not make it, need a bit more complexity
+		minions[i].attack(_enemyUnit.getMinion(columnSize - (i + 1)));
+		if (minions[i].getCurrentHP <= 0) {
+			//death, so need reforming
+		}
 	}
 }
 

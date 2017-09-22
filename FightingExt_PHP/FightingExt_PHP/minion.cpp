@@ -30,11 +30,12 @@ int Minion::getCurrentHP() {
 }
 //first encounter with addresses with C++, remember, without & it calls a copy!
 void Minion::attack(Minion& _objective) {
-	_objective.getHurted(strength);
+	int damage = strength + rand() % 5;
+	_objective.getHurted(damage);
 }
 
-void Minion::getHurted(int damage) {
-	currentHP -= damage;
+void Minion::getHurted(int _damage) {
+	currentHP -= _damage;
 }
 
 Dictionary Minion::getStats() {
