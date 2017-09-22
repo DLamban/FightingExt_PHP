@@ -3,6 +3,7 @@
 //I use a dictionary for clarity
 Minion::Minion(Dictionary _charStats) {
 	charStats = _charStats;
+	death = false;
 	//hmm, I think I could automatize this
 	//maybe some vars derivated from other vars, but first thing first
 	currentHP = charStats["maxHP"];//yes, currentHp is MaxHp at construction time
@@ -26,7 +27,13 @@ formationSpot Minion::getFormationPlace() {
 }
 
 int Minion::getCurrentHP() {
+	if (currentHP <= 0) {
+		death = true;
+	}
 	return currentHP;
+}
+bool Minion::isDeath() {
+	return death;
 }
 //first encounter with addresses with C++, remember, without & it calls a copy!
 void Minion::attack(Minion& _objective) {

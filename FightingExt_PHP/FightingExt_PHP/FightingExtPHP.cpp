@@ -50,11 +50,14 @@ int main()
 	for (int i = 0; i<minionSize; i++) {
 		std::cout << "el hp deste es" << unit2.getMinion(i).getCurrentHP() << "situado en x:" << unit2.getMinion(i).getFormationPlace().x << "y situado en y:" << unit2.getMinion(i).getFormationPlace().y << std::endl;
 	}
-	unit.combat(unit2);
+
+	std::swap(unit2.getMinionByPlace(2, 2), unit2.getMinionByPlace(0, 0));
+	//if (unit2.get)
 	std::cout << "despues del combate" << std::endl;
 	for (int i=0;i<minionSize;i++){
-		std::cout<<"el hp deste es" <<unit2.getMinion(i).getCurrentHP()<<std::endl;
+		std::cout << "el hp deste es" << unit2.getMinion(i).getCurrentHP() << "situado en x:" << unit2.getMinion(i).getFormationPlace().x << "y situado en y:" << unit2.getMinion(i).getFormationPlace().y << std::endl;
 	}
+		std::cout << "el hp deste es" << unit2.getMinionByPlace(2,2).getCurrentHP() << "situado en x:" << unit2.getMinionByPlace(2, 2).getFormationPlace().x << "y situado en y:" << unit2.getMinionByPlace(2, 2).getFormationPlace().y << std::endl;
 	//wait for input boy
 	_getch();
 	return 0;

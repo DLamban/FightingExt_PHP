@@ -7,10 +7,8 @@ Unit::Unit(Minion* _minions, int arr_size, int _columnSize) {
 	size = arr_size;
 	columnSize = _columnSize;
 	//not so simple, ceil just round minions, not lines
-
 	lineSize = std::ceil((float)size / (float)columnSize);
 	//defining spot places for minions
-	//minions[0].setFormationPlace(7, 7);
 	int index = 0;
 	for (int y = 0; y < lineSize; y++) {
 		for (int x = 0; x < columnSize; x++) {
@@ -36,7 +34,32 @@ Unit::Unit(Minion* _minions, int arr_size, int _columnSize) {
 	//current direction=up;
 	currentDir = up;
 }
+void Unit::reforming() {
+	//swap minions from back to forth, prob need a function that gets minion based on position
+	//check line, by line
+	int index = 0;
+	for (int y = 0; y < lineSize; y++) {
+		for (int x = 0; x < columnSize; x++) {
+			//check out of boundaries
+			if (index > size) break;
+			if (minions[index].isDeath()) {
 
+			}
+		}
+	}
+}
+int * Unit::checkOutOfArray() {
+	return nullptr;
+}
+Minion& Unit::getMinionByPlace(int x, int y) {
+	int index = 0;
+	while (index < size) {
+		if (minions[index].getFormationPlace().x == x && minions[index].getFormationPlace().y == y) return  minions[index] ;
+		index++;
+	}
+	//if didn't find nobody, return null
+	//return NULL;
+}
 void Unit::createUnitHitbox() {
 	unitHitbox.topLeft.x = 0;
 	unitHitbox.topLeft.y = 0;
@@ -90,9 +113,11 @@ void Unit::combat(Unit& _enemyUnit) {
 	for (int i = 0; i<columnSize; i++) {
 		//attack!!!
 		//taking minions by index will not make it, need a bit more complexity
-		minions[i].attack(_enemyUnit.getMinion(columnSize - (i + 1)));
-		if (minions[i].getCurrentHP <= 0) {
-			//death, so need reforming
+		Minion& enemyMinion = _enemyUnit.getMinion(columnSize - (i + 1));
+
+		minions[i].attack(enemyMinion);
+		if (enemyMinion.isDeath()) {
+			reforming();
 		}
 	}
 }

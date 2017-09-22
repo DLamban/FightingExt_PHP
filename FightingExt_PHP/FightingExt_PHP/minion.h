@@ -15,6 +15,7 @@ typedef struct formationSpot {
 class Minion {
 
 private:
+	bool death;
 	// defined as int, try to stick to round numbers
 	Dictionary charStats;
 	int currentHP;
@@ -43,7 +44,7 @@ public:
 	int getCurrentHP();
 	void attack(Minion& _objective);
 	void getHurted(int damage);
-
+	bool isDeath();
 	//setters
 };
 

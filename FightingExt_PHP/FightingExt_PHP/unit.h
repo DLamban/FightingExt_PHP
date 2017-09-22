@@ -34,7 +34,9 @@ private:
 	coord position;
 public:
 	//constructor
+	int * checkOutOfArray();
 	Minion& getMinion(int index);
+	Minion& getMinionByPlace(int x, int y);
 	Unit(Minion* minions, int arr_size, int _columnSize);
 	void createUnitHitbox();
 	hitbox getUnitHitbox();
@@ -43,5 +45,6 @@ public:
 	void rotateDir(float an);
 	coord getPosition();
 	void move(dirVec direction, float speed);
+	void reforming();
 	~Unit();  // DON'T FORGET TO FREE UP SPACE!
 };
