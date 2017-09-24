@@ -22,6 +22,7 @@ typedef struct hitbox {
 class Unit {
 private:
 	int size;
+	int aliveSize;
 	hitbox minionHitbox;
 	hitbox unitHitbox;
 	int columnSize;
@@ -34,7 +35,8 @@ private:
 	coord position;
 public:
 	//constructor
-	int * checkOutOfArray();
+	void killMinion();
+	void setFormation();
 	Minion& getMinion(int index);
 	Minion& getMinionByPlace(int x, int y);
 	Unit(Minion* minions, int arr_size, int _columnSize);

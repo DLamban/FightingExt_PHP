@@ -1,5 +1,6 @@
 #include "minion.h"
 #include "stdafx.h"
+
 //I use a dictionary for clarity
 Minion::Minion(Dictionary _charStats) {
 	charStats = _charStats;
@@ -27,9 +28,6 @@ formationSpot Minion::getFormationPlace() {
 }
 
 int Minion::getCurrentHP() {
-	if (currentHP <= 0) {
-		death = true;
-	}
 	return currentHP;
 }
 bool Minion::isDeath() {
@@ -37,12 +35,16 @@ bool Minion::isDeath() {
 }
 //first encounter with addresses with C++, remember, without & it calls a copy!
 void Minion::attack(Minion& _objective) {
+	
 	int damage = strength + rand() % 5;
 	_objective.getHurted(damage);
 }
 
 void Minion::getHurted(int _damage) {
 	currentHP -= _damage;
+	if (currentHP <= 0) {
+		death = true;
+	}
 }
 
 Dictionary Minion::getStats() {
