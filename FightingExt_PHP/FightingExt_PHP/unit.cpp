@@ -7,7 +7,7 @@ Unit::Unit(Minion* _minions, int arr_size, int _columnSize) {
 	size = arr_size;
 	columnSize = _columnSize;
 	aliveSize = size;
-	lineSize = std::ceil((float)size / (float)columnSize);
+	rowSize = std::ceil((float)size / (float)columnSize);
 	setFormation();
 	
 
@@ -29,7 +29,7 @@ Unit::Unit(Minion* _minions, int arr_size, int _columnSize) {
 void Unit::setFormation() {
 	//defining spot places for minions
 	int index = 0;
-	for (int y = 0; y < lineSize; y++) {
+	for (int y = 0; y < rowSize; y++) {
 		for (int x = 0; x < columnSize; x++) {
 			//watch for out of boundaries
 			if (index >= size) { break; };
@@ -43,25 +43,81 @@ void Unit::killMinion() {
 }
 //It's totally imposible to have a perfect algorithm that works in all the cases, so use more than 1 algorithm
 //replace the dead minions with fresh from behind
-//because they are in formation, only the first line can die*
+//because they are in formation, only the first row can die*
 //*not true, they could be being flanked
 void Unit::reforming() {
 	//just do the for loop for the living
 	int index = 0;
 	std::cout << "cuantos vivos" << aliveSize << std::endl;
-	
-	for (int i = 0; i < aliveSize; i++) {
-		int posX = i%columnSize;
-		int posY = i / columnSize;
-		if (minions[i].isDeath()) {
-			std::cout << "cambiando(" << minions[i].getFormationPlace().x<<","<< minions[i].getFormationPlace().y<<") por "<< getMinionByPlace(posX, posY + 1).getFormationPlace().x<<","<< getMinionByPlace(posX, posY + 1).getFormationPlace().y << std::endl;
-			if (getMinionByPlace(posX, posY + 1).isDeath()) break;//this break was so necessary, don't change dead for dead
-			std::swap(minions[i], getMinionByPlace(posX, posY + 1));
+	printDeathMatrix();
+	//do by rows, makes sense
+	for (int row = 0; row < rowSize-1; row++) {
+		//check next row has replacements
+		
+		if (checkRowReplacements( row+1)) {//continue then
+			//so now, we always hace replacement, so we can avoid some null checks
+
+			//WATCH OUT, because the array changes dinamyc the above statement is NOT TRUE and leads to BUG
+			
+			int index = row*columnSize;
+
+			for (int x = 0; x < columnSize; x++) {
+				if (minions[index].isDeath()) {
+					//need replacement
+					Minion& buffMinion = getMinionByPlace(x, row + 1);
+					int searcher = 1;
+					while (buffMinion.isDeath()) {
+						//first search x-1, then x+1, then x-2, then x+2... 
+						searcher *= -1;
+						buffMinion = getMinionByPlace(x + searcher, row + 1);
+						if (searcher > 0) searcher++;
+					}
+					std::swap(minions[index], buffMinion);
+				}
+				index++;
+			}
+		}
+		else {
+			//finish reforming when last line is full of death MUAHAHA
+			break;
 		}
 	}
+	/*for (int i = 0; i < aliveSize; i++) {
+		int posX = i%columnSize;
+		int posY = i / columnSize;
+		//pseudocode:
+		//if last row is full of death minions -> exit
+		if (minions[i].isDeath()) {
+			//std::cout << "cambiando(" << minions[i].getFormationPlace().x<<","<< minions[i].getFormationPlace().y<<") por "<< getMinionByPlace(posX, posY + 1).getFormationPlace().x<<","<< getMinionByPlace(posX, posY + 1).getFormationPlace().y << std::endl;
+			Minion& buffMinion = getMinionByPlace(posX, posY + 1);
+			//restart posX
+			posX = 0;
+			while (buffMinion.isDeath()) {
+				//if straightforward replacement is dead, what then?
+				//then check all the minions on the back row, starting from left, sorry, it will get messy, but makes sense in a unit reforming rows
+				buffMinion = getMinionByPlace(posX, posY + 1);
+				posX++;
+			}
+			std::swap(minions[i], buffMinion);
+		}
+	}*/
 	//reset formation:
 	setFormation();
 
+}
+bool Unit::checkRowReplacements(int _rowIndex) {
+	
+	//check next row has someone alive or GTFO
+	int startIndex = (_rowIndex)*columnSize;
+	int endIndex = startIndex + columnSize;
+	
+	//it's a pain checking always the last irregular row ¬¬
+	if (endIndex > size) endIndex = size;
+	for (int i = startIndex; i < endIndex; i++) {
+		if (!minions[i].isDeath()) return true;
+	}
+	
+	return false;
 }
 
 /**
@@ -72,8 +128,8 @@ Minion& Unit::getMinionByPlace(int x, int y) {
 	int index = 0;
 	
 	int indexByPos = (y * columnSize) + x;//the index in the array based in coord
-	
-	if (indexByPos > size) {//out of bounds
+	std::cout << "este el indexbypos, si pasa de 25 malo" << indexByPos << std::endl;
+	if (indexByPos >= size) {//out of bounds
 		//start at last element of the array
 		index = size - 1;
 		//error if everyone is dead
@@ -96,7 +152,7 @@ void Unit::createUnitHitbox() {
 	unitHitbox.topLeft.x = 0;
 	unitHitbox.topLeft.y = 0;
 	unitHitbox.bottRight.x = minionHitbox.bottRight.x*columnSize;
-	unitHitbox.bottRight.y = minionHitbox.bottRight.y*lineSize;
+	unitHitbox.bottRight.y = minionHitbox.bottRight.y*rowSize;
 }
 hitbox Unit::getUnitHitbox() {
 	return unitHitbox;
@@ -136,7 +192,7 @@ Minion& Unit::getMinion(int index) {
 //just beginning, so some asumptions:
 //unit's line are equal in size, and are facing each other,
 // the first element fight with the last
-//just 1 line for now
+//just 1 row for now
 // 			unit1:	unit2:
 //     		 0 > 	< last
 //		middle > 	< middle
@@ -156,7 +212,21 @@ void Unit::combat(Unit& _enemyUnit) {
 		
 	}
 }
-
+void Unit::printDeathMatrix (){
+	string rowString = "";
+	string matrixString = "";
+	int index = 0;
+	for (int y = 0; y < rowSize; y++) {
+		for (int x = 0; x < columnSize; x++) {
+			//remember check out of bounds (stupid irregular matrix)
+			if (index >= size) break;
+			rowString = rowString + std::to_string(minions[index].isDeath());
+			index++;
+		}
+		rowString += "\n";
+	}
+	std::cout << rowString << std::endl;
+}
 Unit::~Unit() {
 	//delete minions;
 }

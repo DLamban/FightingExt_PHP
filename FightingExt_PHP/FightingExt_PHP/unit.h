@@ -27,7 +27,7 @@ private:
 	hitbox unitHitbox;
 	int columnSize;
 	//linesize is size/columnSize as int
-	int lineSize;
+	int rowSize;
 	Minion* minions;
 	//Direction vector
 	dirVec up;
@@ -37,7 +37,9 @@ public:
 	//constructor
 	void killMinion();
 	void setFormation();
-	Minion& getMinion(int index);
+	void printDeathMatrix();
+	bool checkRowReplacements(int indexRow);
+	Minion& getMinion	(int index);
 	Minion& getMinionByPlace(int x, int y);
 	Unit(Minion* minions, int arr_size, int _columnSize);
 	void createUnitHitbox();

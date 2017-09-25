@@ -62,6 +62,17 @@ int main()
 	for (int i=0;i<minionSize;i++){
 		std::cout << "el hp deste es" << unit2.getMinion(i).getCurrentHP() << "situado en x:" << unit2.getMinion(i).getFormationPlace().x << "y situado en y:" << unit2.getMinion(i).getFormationPlace().y << std::endl;
 	}
+	unit.combat(unit2);
+	//if (unit2.get)
+	std::cout << "despues del combate" << std::endl;
+	unit2.reforming();
+
+
+	for (int i = 0; i<minionSize; i++) {
+		std::cout << "el hp deste es" << unit2.getMinion(i).getCurrentHP() << "situado en x:" << unit2.getMinion(i).getFormationPlace().x << "y situado en y:" << unit2.getMinion(i).getFormationPlace().y << std::endl;
+	}
+	unit2.printDeathMatrix();
+
 	//std::cout << "el hp deste es" << unit2.getMinionByPlace(2,2).getCurrentHP() << "situado en x:" << unit2.getMinionByPlace(2, 2).getFormationPlace().x << "y situado en y:" << unit2.getMinionByPlace(2, 2).getFormationPlace().y << std::endl;
 
 	//std::cout << "el hp deste es" << unit2.getMinionByPlace(10,10).getCurrentHP() << "situado en x:" << unit2.getMinionByPlace(10, 10).getFormationPlace().y << "y situado en y:" << unit2.getMinionByPlace(10, 10).getFormationPlace().y << std::endl;
